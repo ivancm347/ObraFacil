@@ -67,13 +67,6 @@ const $=id=>document.getElementById(id), money=n=>(Number(n)||0).toLocaleString(
 const categories=['Drywall e gesso','Cimento e argamassa','Areia, pedra e agregados','Tintas e impermeabilizantes','Ferramentas','Elétrica','Hidráulica','Fixadores e ferragens','Madeiras e telhas','Pisos e revestimentos','EPI e segurança','Serviços','Outros'];
 let db=loadDB();
 function loadDB(){try{return JSON.parse(localStorage.getItem('obrafacil_db'))||{products:[],clients:[],docs:[],company:{name:'Minha Empresa',phone:'',email:'',address:'',footer:'Obrigado pela preferência!'}}}catch(e){return {products:[],clients:[],docs:[],company:{name:'Minha Empresa',phone:'',email:'',address:'',footer:'Obrigado pela preferência!'}}}}
-
-function autoSeedObramaxIfEmpty(){
-  if(!db.products || db.products.length===0){
-    try{ seedObramax(); }catch(e){ console.error(e); }
-  }
-}
-
 function save(){localStorage.setItem('obrafacil_db',JSON.stringify(db));renderAll()}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -130,12 +123,19 @@ function seedObramax(){let list=[
 ['Chapa Drywall Standard Branca 12,5mm 120x240cm Placo','chapa',52.9,'Drywall e gesso'],
 ['Chapa Drywall Standard Branca 12,5mm 120x240cm Knauf','chapa',55.9,'Drywall e gesso'],
 ['Chapa Drywall Standard Branca 12,5mm 120x240cm Gypsum','chapa',51.9,'Drywall e gesso'],
+['Chapa Drywall Standard Branca 12,5mm 120x300cm Knauf','chapa',72.9,'Drywall e gesso'],
+['Chapa Drywall Standard Branca 12,5mm 60x200cm Knauf','chapa',26.9,'Drywall e gesso'],
 ['Chapa Drywall RU Verde 12,5mm 120x180cm Knauf','chapa',52.9,'Drywall e gesso'],
 ['Chapa Drywall RU Verde 12,5mm 120x240cm Knauf','chapa',68.9,'Drywall e gesso'],
 ['Chapa Drywall RU Verde 12,5mm 120x180cm Placo','chapa',49.9,'Drywall e gesso'],
+['Chapa Drywall RU Verde 12,5mm 120x240cm Placo','chapa',66.9,'Drywall e gesso'],
 ['Chapa Drywall RF Rosa 12,5mm 120x180cm Knauf','chapa',53.9,'Drywall e gesso'],
 ['Chapa Drywall RF Rosa 12,5mm 120x240cm Knauf','chapa',71.5,'Drywall e gesso'],
 ['Chapa Drywall RF Rosa 12,5mm 120x180cm Gypsum','chapa',52.9,'Drywall e gesso'],
+['Chapa Drywall RF Rosa 15mm 120x240cm Gypsum Fortíssima','chapa',60.9,'Drywall e gesso'],
+['Chapa Drywall Perfurada Acústica 12,5mm 120x240cm','chapa',145.0,'Drywall e gesso'],
+['Chapa Cimentícia 8mm 120x240cm','chapa',89.9,'Drywall e gesso'],
+['Chapa Cimentícia 10mm 120x240cm','chapa',109.9,'Drywall e gesso'],
 ['Guia Drywall Aço Galvanizado 48x35mm 3m Multiperfil','barra',16.9,'Drywall e gesso'],
 ['Guia Drywall Aço Galvanizado 70x35mm 3m Multiperfil','barra',19.9,'Drywall e gesso'],
 ['Guia Drywall Aço Galvanizado 90x35mm 3m Multiperfil','barra',24.9,'Drywall e gesso'],
@@ -144,32 +144,125 @@ function seedObramax(){let list=[
 ['Montante Drywall Aço Galvanizado 90x25mm 3m Multiperfil','barra',29.9,'Drywall e gesso'],
 ['Perfil Enrijecido F530 46x18mm 3m Multiperfil','barra',12.9,'Drywall e gesso'],
 ['Perfil Cantoneira 25x30mm 3m Multiperfil','barra',8.9,'Drywall e gesso'],
+['Perfil Cantoneira Perfurada 25x25mm 3m','barra',7.9,'Drywall e gesso'],
 ['Perfil Tabica 40x48mm 3m Multiperfil','barra',17.5,'Drywall e gesso'],
+['Perfil Tabica 40x40mm Lisa 3m','barra',16.5,'Drywall e gesso'],
 ['Perfil Travessa T24 32x24mm 0,625m Multiperfil','un',3.19,'Drywall e gesso'],
+['Perfil Travessa T24 32x24mm 1,25m Multiperfil','un',5.9,'Drywall e gesso'],
 ['Pendural Regulador F530 Anão Aço Galvanizado Multiperfil','un',1.9,'Drywall e gesso'],
+['Pendural Regulador F530 Longo Aço Galvanizado','un',2.5,'Drywall e gesso'],
 ['Tirante com Virola para Sustentação 0,5m Multiperfil','un',2.8,'Drywall e gesso'],
+['Tirante com Virola 1,0m Multiperfil','un',3.9,'Drywall e gesso'],
 ['União Emenda F530 Multiperfil','un',1.2,'Drywall e gesso'],
 ['Presilha F530 Multiperfil','un',1.1,'Drywall e gesso'],
+['Suporte Nivelador para Forro','un',1.5,'Drywall e gesso'],
 ['Massa para Acabamento de Drywall 14Kg Multiperfil','saco',68.9,'Drywall e gesso'],
 ['Massa para Juntas Drywall 28Kg Knauf','saco',89.9,'Drywall e gesso'],
+['Massa Pronta para Drywall 25Kg Placo','saco',79.9,'Drywall e gesso'],
 ['Fita Telada Drywall Fibra de Vidro 48mm 90m Adfors','rolo',28.9,'Drywall e gesso'],
+['Fita Telada 90m Fibatape','rolo',32.9,'Drywall e gesso'],
 ['Fita Papel Microperfurada 52mm 150m','rolo',22.5,'Drywall e gesso'],
+['Gesso em Pó Multiuso 1Kg Argos','kg',4.5,'Drywall e gesso'],
+['Gesso Cola para Forros 5Kg América','saco',24.9,'Drywall e gesso'],
+['Gesso Cola 40Kg','saco',42.9,'Drywall e gesso'],
 ['Parafuso TA25 Ponta Agulha 1000 Peças','caixa',42.9,'Fixadores e ferragens'],
+['Parafuso TA35 Ponta Agulha 1000 Peças','caixa',48.9,'Fixadores e ferragens'],
 ['Parafuso GN25 Ponta Agulha 1000 Peças','caixa',45.9,'Fixadores e ferragens'],
+['Parafuso GN35 Ponta Agulha 1000 Peças','caixa',52.9,'Fixadores e ferragens'],
 ['Parafuso Metal-Metal 4,2x13mm 1000 Peças','caixa',38.9,'Fixadores e ferragens'],
+['Parafuso Placa Cimentícia 32mm 500 Peças','caixa',39.9,'Fixadores e ferragens'],
 ['Bucha e Parafuso S6 com Anel 100 Peças','kit',18.9,'Fixadores e ferragens'],
+['Bucha e Parafuso S8 com Anel 100 Peças','kit',24.9,'Fixadores e ferragens'],
+['Chumbador Parabolt 3/8 x 3','un',3.5,'Fixadores e ferragens'],
+['Prego de Aço 17x21 1Kg','kg',18.9,'Fixadores e ferragens'],
 ['Cimento Portland 50kg - Argos / Votoran','saco',39.9,'Cimento e argamassa'],
+['Cimento CP II 5kg Argos','saco',12.9,'Cimento e argamassa'],
 ['Argamassa AC-I 20kg Quartzolit','saco',18.9,'Cimento e argamassa'],
 ['Argamassa AC-II 20kg Quartzolit','saco',28.9,'Cimento e argamassa'],
 ['Argamassa AC-III 20kg Quartzolit','saco',45.9,'Cimento e argamassa'],
-['Gesso em Pó Multiuso 1Kg Argos','kg',4.5,'Drywall e gesso'],
-['Gesso Cola para Forros 5Kg América','saco',24.9,'Drywall e gesso'],
+['Argamassa Piso sobre Piso 20kg Quartzolit','saco',42.9,'Cimento e argamassa'],
+['Argamassa Porcelanato Interno 20kg','saco',38.9,'Cimento e argamassa'],
+['Rejunte Cimentício 1kg Branco','kg',9.9,'Cimento e argamassa'],
+['Rejunte Porcelanato 1kg - várias cores','kg',12.9,'Cimento e argamassa'],
+['Rejunte Epóxi 1kg','kg',68.9,'Cimento e argamassa'],
+['Aditivo Impermeabilizante Vedacit 18L','lata',145.0,'Cimento e argamassa'],
+['Areia Média Ensacada 20kg','saco',8.9,'Areia, pedra e agregados'],
+['Areia Grossa Ensacada 20kg','saco',8.9,'Areia, pedra e agregados'],
+['Pedra Brita 1 Ensacada 20kg','saco',11.9,'Areia, pedra e agregados'],
+['Pedrisco Ensacado 20kg','saco',12.9,'Areia, pedra e agregados'],
 ['Tinta Acrílica Premium Branco 18L Coral / Suvinil','lata',245.0,'Tintas e impermeabilizantes'],
+['Tinta Acrílica Premium Branco 3,6L','lata',89.9,'Tintas e impermeabilizantes'],
 ['Selador Acrílico 18L','lata',115.0,'Tintas e impermeabilizantes'],
-['Forro PVC Branco 6mm 20x600cm - Pacote 3,6m² Bariri','m²',28.9,'Pisos e revestimentos'],
-['Rodaforro PVC Branco 4m Bariri','barra',22.9,'Pisos e revestimentos']
+['Massa Corrida PVA 25kg','saco',58.9,'Tintas e impermeabilizantes'],
+['Massa Acrílica 25kg','saco',78.9,'Tintas e impermeabilizantes'],
+['Fundo Preparador de Parede 18L','lata',125.0,'Tintas e impermeabilizantes'],
+['Impermeabilizante Manta Asfáltica 10m - Viapol','rolo',145.0,'Tintas e impermeabilizantes'],
+['Tinta Esmalte Sintético Branco 3,6L','lata',98.9,'Tintas e impermeabilizantes'],
+['Verniz Marítimo 3,6L','lata',112.0,'Tintas e impermeabilizantes'],
+['Textura Acrílica Barrica 25kg Branco','saco',68.9,'Tintas e impermeabilizantes'],
+['Trena 5m Tramontina','un',25.9,'Ferramentas'],
+['Trena 8m Tramontina','un',38.9,'Ferramentas'],
+['Estilete Largo 18mm','un',12.9,'Ferramentas'],
+['Serrote para Gesso e Drywall 180mm','un',28.9,'Ferramentas'],
+['Parafusadeira Drywall 1/4 20V Bateria','un',489.0,'Ferramentas'],
+['Furadeira de Impacto 650W','un',245.0,'Ferramentas'],
+['Disco de Corte para Metal 115mm Norton','un',8.9,'Ferramentas'],
+['Lixa para Parede 120 - Pacote 10un','caixa',18.9,'Ferramentas'],
+['Desempenadeira de Aço Lisa 12x24cm','un',22.9,'Ferramentas'],
+['Espátula de Aço 10cm','un',14.9,'Ferramentas'],
+['Nível Alumínio 60cm','un',45.9,'Ferramentas'],
+['Prumo de Centro 500g','un',32.9,'Ferramentas'],
+['Alicate Puncionador para Drywall MTX','un',68.9,'Ferramentas'],
+['Serra Copo Diamantada Drywall','un',42.9,'Ferramentas'],
+['Fio Flexível 1,5mm 100m - Sil','rolo',125.0,'Elétrica'],
+['Fio Flexível 2,5mm 100m - Sil','rolo',185.0,'Elétrica'],
+['Fio Flexível 4,0mm 100m - Sil','rolo',285.0,'Elétrica'],
+['Cabo PP 2x1,5mm 100m','rolo',245.0,'Elétrica'],
+['Tomada 2P+T 10A 4x2 Pial Plus Legrand','un',8.9,'Elétrica'],
+['Interruptor Simples 4x2 Pial Plus','un',8.5,'Elétrica'],
+['Disjuntor Unipolar 20A JNG','un',12.9,'Elétrica'],
+['Disjuntor Bipolar 32A','un',34.9,'Elétrica'],
+['Fita Isolante 10m 3M','rolo',8.9,'Elétrica'],
+['Fita Isolante 20m','rolo',14.9,'Elétrica'],
+['Lâmpada LED Bulbo 9W','un',6.9,'Elétrica'],
+['Lâmpada LED Bulbo 12W','un',9.9,'Elétrica'],
+['Spot LED Embutir 5W Branco','un',18.9,'Elétrica'],
+['Tubo PVC Soldável 25mm 6m Tigre','barra',28.9,'Hidráulica'],
+['Tubo PVC Soldável 32mm 6m Tigre','barra',52.9,'Hidráulica'],
+['Tubo PVC Esgoto 100mm 6m Tigre','barra',89.9,'Hidráulica'],
+['Joelho PVC Soldável 25mm','un',2.5,'Hidráulica'],
+['Joelho PVC Soldável 32mm','un',3.9,'Hidráulica'],
+['Tê PVC Soldável 25mm','un',3.2,'Hidráulica'],
+['Luva PVC Soldável 25mm','un',1.9,'Hidráulica'],
+['Registro Esfera 25mm','un',18.9,'Hidráulica'],
+['Torneira Boia Caixa D\'água','un',28.9,'Hidráulica'],
+['Sifão Copo Extensível Universal Amanco','un',14.9,'Hidráulica'],
+['Válvula para Lavatório Metal','un',22.9,'Hidráulica'],
+['Fita Veda Rosca 18mmx10m','un',4.5,'Hidráulica'],
+['Telha Cerâmica Romana - por milheiro','un',1.25,'Madeiras e telhas'],
+['Telha Fibrocimento 2,44x1,10m 6mm Brasilit','un',89.9,'Madeiras e telhas'],
+['Madeirite Plastificado 18mm 220x110cm','chapa',145.0,'Madeiras e telhas'],
+['Caibro de Madeira 5x5cm 3m','barra',28.9,'Madeiras e telhas'],
+['Tábua Pinus 30cm 3m','un',32.9,'Madeiras e telhas'],
+['Forro PVC Branco Normatizado 6mm 20x300cm - Pacote 3m² Bariri','m²',28.9,'Pisos e revestimentos'],
+['Forro PVC Branco 8mm 20x600cm - Pacote 4,8m²','m²',32.9,'Pisos e revestimentos'],
+['Rodaforro PVC Branco 4m Bariri','barra',22.9,'Pisos e revestimentos'],
+['Porcelanato Retificado 61x61cm Cinza 1,87m²','m²',58.9,'Pisos e revestimentos'],
+['Piso Vinílico Click 2mm','m²',89.9,'Pisos e revestimentos'],
+['Espaçador de Piso 2mm 100un','kit',8.9,'Pisos e revestimentos'],
+['Óculos de Proteção Incolor','un',15.9,'EPI e segurança'],
+['Luva de Vaqueta','par',22.9,'EPI e segurança'],
+['Capacete de Segurança Branco','un',28.9,'EPI e segurança'],
+['Máscara PFF2 com Válvula 10un','caixa',32.9,'EPI e segurança'],
+['Cinto de Segurança Paraquedista','un',145.0,'EPI e segurança'],
+['Bota de Segurança Couro','par',89.9,'EPI e segurança'],
+['Mão de Obra Instalação Drywall Parede','m²',45.0,'Serviços'],
+['Mão de Obra Instalação Forro F530','m²',38.0,'Serviços'],
+['Mão de Obra Pintura Acrílica','m²',18.0,'Serviços'],
+['Mão de Obra Assentamento Porcelanato','m²',55.0,'Serviços'],
+['Frete / Entrega - Caminhão','un',150.0,'Serviços']
 ],a=0,u=0;
-list.forEach(x=>{upsertProduct(x[0],x[1],x[2],x[3],'Obramax Praia Grande','Preço de referência Obramax Praia Grande - Av. Ministro Marcos Freire, 1500. Confirmar na loja antes de vender.')==='a'?a++:u++});save();alert(a+' itens adicionados e '+u+' atualizados. Preços da Obramax Praia Grande carregados como custo. Margem de 30% aplicada no preço de venda. Confira na loja antes de orçar.')}
+list.forEach(x=>{upsertProduct(x[0],x[1],x[2],x[3],'Obramax Praia Grande','Preço de referência Obramax Praia Grande - Av. Ministro Marcos Freire, 1500. Confirmar na loja antes de vender.')==='a'?a++:u++});save();alert('Catálogo completo Obramax Praia Grande carregado: '+a+' novos e '+u+' atualizados ('+list.length+' produtos). Preços como custo, margem 30% no preço de venda.')}
 function importList(){let lines=$('impText').value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean),a=0,u=0,bad=0;lines.forEach((l,i)=>{let p=l.split(l.includes('\t')?'\t':';').map(x=>x.trim().replace(/^"|"$/g,'')),cost=parseMoney(p[2]);if(!p[0]||isNaN(cost)){if(i>0)bad++;return}let unit=(p[1]||'un').toLowerCase();if(!units.includes(unit))unit='un';let cat=categories.find(c=>c.toLowerCase()===(p[3]||'').toLowerCase())||'Outros';upsertProduct(p[0],unit,cost,cat,'','')==='a'?a++:u++});if(!a&&!u){alert('Nenhum produto válido encontrado. Use: nome;unidade;custo;categoria');return}save();$('impText').value='';alert(a+' produtos adicionados, '+u+' atualizados'+(bad?' e '+bad+' linhas ignoradas (sem custo válido).':'.'))}
 $('impFile').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{$('impText').value=r.result;e.target.value=''};r.readAsText(f)};
 fillCategories();autoSeedObramaxIfEmpty();renderAll();addQuoteItem();
@@ -180,6 +273,12 @@ if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('./sw.js').catch(console.error);
   });
+}
+// Auto carrega Obramax se banco vazio
+function autoSeedObramaxIfEmpty(){
+  if(!db.products || db.products.filter(p=>p.active!==false).length===0){
+    try{ seedObramax(); }catch(e){ console.error(e); }
+  }
 }
 </script>
 
